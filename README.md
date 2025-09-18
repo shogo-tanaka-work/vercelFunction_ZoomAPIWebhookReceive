@@ -1,0 +1,2 @@
+# vercelFunction_ZoomAPIWebhookReceive
+ZoomAPIより発行されるWebhookを受信するためのvercel_functionリポジトリです。
