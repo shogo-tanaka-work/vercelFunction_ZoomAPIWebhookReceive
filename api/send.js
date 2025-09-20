@@ -1,32 +1,17 @@
-import { IncomingMessage, ServerResponse } from 'http';
-import crypto from 'crypto';
-
-// Vercel Function用の型定義
-type VercelRequest = IncomingMessage & {
-  query: { [key: string]: string | string[] };
-  cookies: { [key: string]: string };
-  body: any;
-  method?: string;
-};
-
-type VercelResponse = ServerResponse & {
-  status: (code: number) => VercelResponse;
-  json: (object: any) => VercelResponse;
-  end: (data?: any) => VercelResponse;
-};
+const crypto = require('crypto');
 
 // bodyParserを切る（raw取得のため）
 export const config = { api: { bodyParser: false } };
 
-const readRaw = (req: VercelRequest) =>
-  new Promise<string>((resolve, reject) => {
+const readRaw = (req) =>
+  new Promise((resolve, reject) => {
     let data = '';
     req.on('data', chunk => data += chunk);
     req.on('end', () => resolve(data));
     req.on('error', reject);
   });
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -34,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     // rawボディを取得
     const raw = await readRaw(req);
-    let body: any = {};
+    let body = {};
     
     try {
       body = JSON.parse(raw || '{}');
@@ -84,8 +69,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 署名検証（本番イベント用）
-    const signature = req.headers['x-zm-signature'] as string;
-    const timestamp = req.headers['x-zm-request-timestamp'] as string;
+    const signature = req.headers['x-zm-signature'];
+    const timestamp = req.headers['x-zm-request-timestamp'];
     
     if (signature && timestamp) {
       const secretToken = process.env.ZOOM_WEBHOOK_SECRET_TOKEN;
@@ -146,7 +131,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Error processing Zoom webhook:', error);
     return res.status(500).json({ 
       success: false, 
-      error: error.message,
+      error: error?.message || 'Unknown error',
       timestamp: new Date().toISOString()
     });
   }
