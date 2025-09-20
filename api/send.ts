@@ -1,24 +1,10 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
-
-// Vercel Function用の型定義
-type VercelRequest = IncomingMessage & {
-  query: { [key: string]: string | string[] };
-  cookies: { [key: string]: string };
-  body: any;
-  method?: string;
-};
-
-type VercelResponse = ServerResponse & {
-  status: (code: number) => VercelResponse;
-  json: (object: any) => VercelResponse;
-  end: (data?: any) => VercelResponse;
-};
 
 // bodyParserを切る（raw取得のため）
 export const config = { api: { bodyParser: false } };
 
-const readRaw = (req: VercelRequest) =>
+const readRaw = (req: NextApiRequest) =>
   new Promise<string>((resolve, reject) => {
     let data = '';
     req.on('data', chunk => data += chunk);
@@ -26,7 +12,7 @@ const readRaw = (req: VercelRequest) =>
     req.on('error', reject);
   });
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
