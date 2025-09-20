@@ -4,8 +4,8 @@
   "description": "Zoom Webhook receiver for Vercel Functions",
   "private": true,
   "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'No build step required for Vercel Functions'"
+    "build": "tsc --noEmit",
+    "dev": "vercel dev"
   },
   "devDependencies": {
     "@types/node": "^18.15.0",

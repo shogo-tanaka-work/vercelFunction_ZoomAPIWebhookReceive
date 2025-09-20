@@ -10,22 +10,9 @@ ZoomAPIより発行されるWebhookを受信するためのvercel_functionリポ
 
 ## セットアップ
 
-1. **Vercelにデプロイ**
-   ```bash
-   # Vercel CLIでデプロイ
-   vercel --prod
-   
-   # または、GitHubリポジトリと連携してデプロイ
-   ```
-
-2. **環境変数の設定**（`ENVIRONMENT_SETUP.md`を参照）
-   - Vercelダッシュボード → Settings → Environment Variables
-   - `ZOOM_WEBHOOK_SECRET_TOKEN`: ZoomアプリのSecret Token
-   - `GAS_ENDPOINT_URL`: Google Apps ScriptのWebアプリURL
-
-3. **ZoomアプリのEvent SubscriptionsでWebhook URLを設定**
-   - URL: `https://your-project.vercel.app/api/send`
-   - Event types: 必要なイベントを選択（例：recording.completed）
+1. Vercelにデプロイ
+2. 環境変数の設定（`ENVIRONMENT_SETUP.md`を参照）
+3. ZoomアプリのEvent SubscriptionsでWebhook URLを設定
 
 ## URL検証について
 
