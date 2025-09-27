@@ -73,6 +73,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid webhook data' });
   }
 
+  // リクエストヘッダーをログ出力（デバッグ用）
+  console.log('Received Zoom Webhook Headers:', JSON.stringify(req.headers, null, 2));
+  
+  // Zoom関連の重要なヘッダーを抽出してログ出力
+  const zoomHeaders = {
+    'x-zm-trackingid': req.headers['x-zm-trackingid'],
+    'x-zoom-retry-num': req.headers['x-zoom-retry-num'],
+    'x-zm-signature': req.headers['x-zm-signature'],
+    'x-zm-request-timestamp': req.headers['x-zm-request-timestamp'],
+    'user-agent': req.headers['user-agent'],
+    'content-type': req.headers['content-type']
+  };
+  console.log('Zoom Specific Headers:', JSON.stringify(zoomHeaders, null, 2));
+  
   // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
   console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
 
