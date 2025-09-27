@@ -12,6 +12,44 @@ const readRaw = (req) =>
     req.on('error', reject);
   });
 
+// GASへのリクエストを非同期で実行する関数（Fire-and-Forget方式）
+const sendToGasFireAndForget = (webhookData) => {
+  const GAS_URL = process.env.GAS_ENDPOINT_URL;
+  if (!GAS_URL) {
+    console.error('GAS_ENDPOINT_URL is not set');
+    return;
+  }
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'User-Agent': 'Vercel-Zoom-Webhook-Relay/1.0'
+    },
+    body: JSON.stringify(webhookData),
+  })
+  .then(async response => {
+    // GASからのレスポンスを処理
+    let gasResponseBody;
+    const responseText = await response.text();
+    try { 
+      gasResponseBody = JSON.parse(responseText); 
+    } catch { 
+      gasResponseBody = responseText; 
+    }
+
+    // 成功時のログ出力
+    if (response.ok) {
+      console.log('Successfully sent to GAS:', response.status);
+    } else {
+      console.error('GAS responded with error:', response.status, gasResponseBody);
+    }
+  })
+  .catch(error => {
+    console.error('Error sending webhook to GAS:', error.message);
+  });
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('NG');
 
@@ -29,57 +67,22 @@ export default async function handler(req, res) {
     return res.status(200).json({ plainToken: plain, encryptedToken: enc });
   }
 
-  // 以降は本番イベント。まずは200を即返し、後で署名検証を足す
-  try {
-    const GAS_URL = process.env.GAS_ENDPOINT_URL;
-    if (!GAS_URL) return res.status(500).json({ error: 'GAS_ENDPOINT_URL is not set' });
-
-    // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
-    console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
-
-    // Webhookデータの基本的な検証
-    if (!body || typeof body !== 'object') {
-      return res.status(400).json({ error: 'Invalid webhook data' });
-    }
-
-    const response = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'User-Agent': 'Vercel-Zoom-Webhook-Relay/1.0'
-      },
-      body: JSON.stringify(body),
-    });
-
-    // GASからのレスポンスを処理
-    let gasResponseBody;
-    const responseText = await response.text();
-    try { 
-      gasResponseBody = JSON.parse(responseText); 
-    } catch { 
-      gasResponseBody = responseText; 
-    }
-
-    // 成功時のログ出力
-    if (response.ok) {
-      console.log('Successfully sent to GAS:', response.status);
-    } else {
-      console.error('GAS responded with error:', response.status, gasResponseBody);
-    }
-
-    return res.status(response.ok ? 200 : response.status).json({
-      success: response.ok,
-      status: response.status,
-      gasResponse: gasResponseBody,
-      timestamp: new Date().toISOString()
-    });
-
-  } catch (error) {
-    console.error('Error processing Zoom webhook:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: error.message,
-      timestamp: new Date().toISOString()
-    });
+  // 以降は本番イベント。まず200を即返し、GAS処理は非同期で実行
+  // Webhookデータの基本的な検証
+  if (!body || typeof body !== 'object') {
+    return res.status(400).json({ error: 'Invalid webhook data' });
   }
+
+  // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
+  console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
+
+  // ★ まず200レスポンスを即座に返す（Zoomのリトライを防ぐため）
+  res.status(200).json({ 
+    success: true, 
+    message: 'Webhook received and queued for processing',
+    timestamp: new Date().toISOString()
+  });
+
+  // GAS処理を非同期で実行（awaitしない）
+  sendToGasFireAndForget(body);
 }
