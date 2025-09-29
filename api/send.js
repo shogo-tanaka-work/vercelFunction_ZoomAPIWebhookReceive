@@ -90,6 +90,9 @@ export default async function handler(req, res) {
   // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
   console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
 
+  // GAS処理を非同期で開始（レスポンスを返す前に開始し、完了を待たない）
+  const gasProcessingPromise = sendToGasFireAndForget(body);
+  
   // ★ まず200レスポンスを即座に返す（Zoomのリトライを防ぐため）
   res.status(200).json({ 
     success: true, 
@@ -97,6 +100,8 @@ export default async function handler(req, res) {
     timestamp: new Date().toISOString()
   });
 
-  // GAS処理を非同期で実行（awaitしない）
-  sendToGasFireAndForget(body);
+  // 非同期処理が確実に実行されるよう、少し待機してからハンドラーを終了
+  setTimeout(() => {
+    // 何もしない（ハンドラーの実行時間を延長するためだけ）
+  }, 200);
 }
