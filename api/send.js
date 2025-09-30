@@ -12,28 +12,30 @@ const readRaw = (req) =>
     req.on('error', reject);
   });
 
-// GASへのリクエストを非同期で実行する関数（Fire-and-Forget方式）
-const sendToGasFireAndForget = async (webhookData) => {
+// GASへのリクエストを同期的に実行する関数
+const sendToGas = async (webhookData) => {
 
   console.log('GAS_ENDPOINT_URL:', process.env.GAS_ENDPOINT_URL);
   const GAS_URL = process.env.GAS_ENDPOINT_URL;
   if (!GAS_URL) {
     console.error('GAS_ENDPOINT_URL is not set');
-    return;
+    throw new Error('GAS_ENDPOINT_URL is not set');
   }
 
   console.log('GAS送信処理開始');
-  fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'User-Agent': 'Vercel-Zoom-Webhook-Relay/1.0'
-    },
-    body: JSON.stringify(webhookData),
-  })
-  .then(async response => {
+  
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'User-Agent': 'Vercel-Zoom-Webhook-Relay/1.0'
+      },
+      body: JSON.stringify(webhookData),
+    });
 
     console.log('GASからのレスポンス取得');
+    
     // GASからのレスポンスを処理
     let gasResponseBody;
     const responseText = await response.text();
@@ -48,13 +50,15 @@ const sendToGasFireAndForget = async (webhookData) => {
     // 成功時のログ出力
     if (response.ok) {
       console.log('Successfully sent to GAS:', response.status);
+      return { success: true, status: response.status, body: gasResponseBody };
     } else {
       console.error('GAS responded with error:', response.status, gasResponseBody);
+      return { success: false, status: response.status, body: gasResponseBody };
     }
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('Error sending webhook to GAS:', error.message);
-  });
+    throw error;
+  }
 };
 
 export default async function handler(req, res) {
@@ -74,7 +78,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ plainToken: plain, encryptedToken: enc });
   }
 
-  // 以降は本番イベント。まず200を即返し、GAS処理は非同期で実行
+  // 以降は本番イベント。GAS処理を同期的に実行してから200を返す
   // Webhookデータの基本的な検証
   if (!body || typeof body !== 'object') {
     return res.status(400).json({ error: 'Invalid webhook data' });
@@ -97,21 +101,28 @@ export default async function handler(req, res) {
   // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
   console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
 
-  // GAS処理を非同期で開始（レスポンスを返す前に開始し、完了を待たない）
-  const gasProcessingPromise = await sendToGasFireAndForget(body);
-
-  // GAS処理の完了を待たずに、即座に200レスポンスを返す
-  console.log('GAS処理を実行しました');
-  
-  // ★ まず200レスポンスを即座に返す（Zoomのリトライを防ぐため）
-  res.status(200).json({ 
-    success: true, 
-    message: 'Webhook received and queued for processing',
-    timestamp: new Date().toISOString()
-  });
-
-  // 非同期処理が確実に実行されるよう、少し待機してからハンドラーを終了
-  setTimeout(() => {
-    // 何もしない（ハンドラーの実行時間を延長するためだけ）
-  }, 200);
+  try {
+    // GAS処理を同期的に実行（完了を待つ）
+    const gasResult = await sendToGas(body);
+    
+    console.log('GAS処理が完了しました');
+    
+    // GAS処理の完了後に200レスポンスを返す
+    res.status(200).json({ 
+      success: true, 
+      message: 'Webhook received and processed',
+      timestamp: new Date().toISOString(),
+      gasStatus: gasResult.status
+    });
+  } catch (error) {
+    console.error('GAS処理でエラーが発生しました:', error.message);
+    
+    // エラーが発生しても200を返す（Zoomのリトライを防ぐため）
+    res.status(200).json({ 
+      success: false, 
+      message: 'Webhook received but processing failed',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
 }
