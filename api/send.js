@@ -14,12 +14,15 @@ const readRaw = (req) =>
 
 // GASへのリクエストを非同期で実行する関数（Fire-and-Forget方式）
 const sendToGasFireAndForget = async (webhookData) => {
+
+  console.log('GAS_ENDPOINT_URL:', process.env.GAS_ENDPOINT_URL);
   const GAS_URL = process.env.GAS_ENDPOINT_URL;
   if (!GAS_URL) {
     console.error('GAS_ENDPOINT_URL is not set');
     return;
   }
 
+  console.log('GAS送信処理開始');
   fetch(GAS_URL, {
     method: 'POST',
     headers: { 
@@ -29,6 +32,8 @@ const sendToGasFireAndForget = async (webhookData) => {
     body: JSON.stringify(webhookData),
   })
   .then(async response => {
+
+    console.log('GASからのレスポンス取得');
     // GASからのレスポンスを処理
     let gasResponseBody;
     const responseText = await response.text();
@@ -37,6 +42,8 @@ const sendToGasFireAndForget = async (webhookData) => {
     } catch { 
       gasResponseBody = responseText; 
     }
+
+    console.log('GASからのレスポンス処理完了');
 
     // 成功時のログ出力
     if (response.ok) {
@@ -94,7 +101,7 @@ export default async function handler(req, res) {
   const gasProcessingPromise = await sendToGasFireAndForget(body);
 
   // GAS処理の完了を待たずに、即座に200レスポンスを返す
-  console.log('GAS処理を開始しました');
+  console.log('GAS処理を実行しました');
   
   // ★ まず200レスポンスを即座に返す（Zoomのリトライを防ぐため）
   res.status(200).json({ 
