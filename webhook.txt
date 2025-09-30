@@ -1,0 +1,125 @@
+Received Zoom Webhook Headers: {
+  "x-vercel-proxy-signature": "Bearer 07f21346b50bd96b1f145c24f99a39410cd86b6eeb0feaad80a6d4b9de178781",
+  "x-vercel-ja4-digest": "t13d371200_db35923f8641_7c76daad20ec",
+  "authorization": "bkVU092cSgGd5mO_gjj95g",
+  "x-vercel-proxied-for": "170.114.6.88",
+  "x-zm-request-timestamp": "1759232625",
+  "clientid": "-GSFnaX7Sy22UoC5_me64Q",
+  "zm-trace-upstream": "Meeting_Web_marketplace-consumer",
+  "x-vercel-id": "iad1::sgh8b-1759232625868-394795b67bc6",
+  "x-vercel-internal-bot-check": "skip",
+  "x-real-ip": "170.114.6.88",
+  "x-vercel-ip-as-number": "14618",
+  "x-zm-request-id": "1f85f6a9_3fe8_47d1_bfad_468bd9b352df",
+  "x-vercel-ip-continent": "NA",
+  "content-length": "9093",
+  "x-zm-signature": "v0=41019a8edcb1f117b3a5f1792e618c95a4044411b732dc00b9a17987b70dcbc0",
+  "x-forwarded-proto": "https",
+  "user-agent": "Zoom Marketplace/1.0a",
+  "x-forwarded-for": "170.114.6.88",
+  "x-vercel-internal-ingress-port": "18446",
+  "x-vercel-forwarded-for": "170.114.6.88",
+  "host": "prod-vercel-function-zoom-api-webhook-re.vercel.app",
+  "forwarded": "for=170.114.6.88;host=prod-vercel-function-zoom-api-webhook-re.vercel.app;proto=https;sig=0QmVhcmVyIDA3ZjIxMzQ2YjUwYmQ5NmIxZjE0NWMyNGY5OWEzOTQxMGNkODZiNmVlYjBmZWFhZDgwYTZkNGI5ZGUxNzg3ODE=;exp=1759232925",
+  "x-vercel-oidc-token": "eyJraWQiOiJtcmstNDMwMmVjMWI2NzBmNDhhOThhZDYxZGFkZTRhMjNiZTciLCJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NTkyMzI2MjUsIm93bmVyX2lkIjoidGVhbV9WRzFyQzBVMTdrdDhSOFVpTGxFdWt6dEQiLCJpYXQiOjE3NTkyMzI2MjUsInZlcmNlbF9pZCI6ImlhZDE6OnNnaDhiLTE3NTkyMzI2MjU4NjgtMzk0Nzk1YjY3YmM2IiwiYXVkIjoiaHR0cHM6XC9cL3ZlcmNlbC5jb21cL3RhbmFrYS1zaG9nb3MtcHJvamVjdHMiLCJvd25lciI6InRhbmFrYS1zaG9nb3MtcHJvamVjdHMiLCJpc3MiOiJodHRwczpcL1wvb2lkYy52ZXJjZWwuY29tXC90YW5ha2Etc2hvZ29zLXByb2plY3RzIiwicHJvamVjdF9pZCI6InByal9YaHJoQm1BM3VWYWNHTFF3SGh5WnZqbTN2OGhIIiwiZXhwIjoxNzU5MjM2MjI1LCJlbnZpcm9ubWVudCI6InByb2R1Y3Rpb24iLCJzY29wZSI6Im93bmVyOnRhbmFrYS1zaG9nb3MtcHJvamVjdHM6cHJvamVjdDpwcm9kLXZlcmNlbC1mdW5jdGlvbi16b29tLWFwaS13ZWJob29rLXJlY2VpdmU6ZW52aXJvbm1lbnQ6cHJvZHVjdGlvbiIsInN1YiI6Im93bmVyOnRhbmFrYS1zaG9nb3MtcHJvamVjdHM6cHJvamVjdDpwcm9kLXZlcmNlbC1mdW5jdGlvbi16b29tLWFwaS13ZWJob29rLXJlY2VpdmU6ZW52aXJvbm1lbnQ6cHJvZHVjdGlvbiIsInByb2plY3QiOiJwcm9kLXZlcmNlbC1mdW5jdGlvbi16b29tLWFwaS13ZWJob29rLXJlY2VpdmUifQ.nAwVrFW9NQqXfZO0CVA8IBiThrsvmURWthAEpN-unEaAhWxMsTCrmd9apJVVVuV4rbwqstPkRG-UQK9ZaL4s2UvCsM8Ti7rK_WLE_tWo9iCOoSmoXDbokAJoSo3lOek8hCGE74LzYTUkiU323xhbGQHBAVNmiAYDI5C6hxIoss6ujhjPv22GlRnUMROLtNP7wpyy7h_lMsEzMxROSzYHlZ46j2-yVEVTORDwh88-Zc8hp9emSgl63fo4PQm1ncItG497b00huxvBA5t_7O6p3fJ47p0TxqVwQxh1DGz4fB97CU5KUURI15R0T_91welVwb7BJPIjplQ_owUDrP9c7A",
+  "x-vercel-ip-longitude": "-97.822",
+  "x-zm-trackingid": "WEB_e7c7a729f27660326243b1028f5bce66",
+  "x-forwarded-host": "prod-vercel-function-zoom-api-webhook-re.vercel.app",
+  "x-vercel-ip-timezone": "America/Chicago",
+  "x-vercel-deployment-url": "prod-vercel-function-zoom-api-webhook-receive-6rxxcqzuw.vercel.app",
+  "x-vercel-internal-ingress-bucket": "bucket018",
+  "traceparent": "00-e1c3042bc4db71d1bdac3038cfe22b01-e82f5a2686a9b921-00",
+  "x-vercel-function-path": "api/send",
+  "accept-encoding": "gzip",
+  "x-vercel-ip-country": "US",
+  "content-type": "application/json; charset=utf-8",
+  "x-vercel-proxy-signature-ts": "1759232925",
+  "x-vercel-ip-latitude": "37.751",
+  "connection": "close",
+  "accept": "*/*"
+}
+Zoom Specific Headers: {
+  "x-zm-trackingid": "WEB_e7c7a729f27660326243b1028f5bce66",
+  "x-zm-signature": "v0=41019a8edcb1f117b3a5f1792e618c95a4044411b732dc00b9a17987b70dcbc0",
+  "x-zm-request-timestamp": "1759232625",
+  "user-agent": "Zoom Marketplace/1.0a",
+  "content-type": "application/json; charset=utf-8"
+}
+Received Zoom Webhook Data: {
+  "event": "meeting.summary_completed",
+  "payload": {
+    "account_id": "Dr7gRBbXRgq7vwzcJEQrJQ",
+    "object": {
+      "meeting_host_id": "GG29tpZ9T8W8ozPzJ8fpWQ",
+      "meeting_host_email": "sales.bytech1@gmail.com",
+      "meeting_uuid": "a/rQQ5rmSyGwn1Exow57uw==",
+      "meeting_id": 7661729045,
+      "meeting_topic": "②バイテックサポートチームのパーソナルミーティングルーム",
+      "meeting_start_time": "2025-09-30T11:00:46Z",
+      "meeting_end_time": "2025-09-30T11:43:24Z",
+      "summary_start_time": "2025-09-30T11:02:37Z",
+      "summary_end_time": "2025-09-30T11:43:14Z",
+      "summary_created_time": "2025-09-30T11:02:14Z",
+      "summary_last_modified_time": "2025-09-30T11:43:44Z",
+      "summary_title": "Meeting Summary for ②バイテックサポートチームのパーソナルミーティングルーム",
+      "summary_overview": "山本はAI技術の実践的なスキル学習プログラムについて説明し、入門編から五つのコースに分かれる構成やGPT図の作成方法などを紹介した。加藤は新しい仕事の学習に不安を感じているものの、実践をしながら学ぶことに同意し、プロプランとライトプランの違いを理解した。加藤は司法書士業務を本業とすることに難色を示しているものの、今年中には新しい仕事への移行を目指し、来月程度で情報収集を行うことで合意した。",
+      "summary_details": [
+        {
+          "label": "AIスキル学習プログラム紹介",
+          "summary": "山本はAI技術の実践的なスキル学習プログラムについて説明し、インプット学習とサポートの二つの軸で構成されていることを紹介した。入門編では八つの項目から始まり、五つのコース（画像クリエイターコース、ライティングコース、動画クリエイターコース、業務改善コース、そして業務全自動化コース）に分かれる流れを説明した。GPT図の作成方法やプロンプトの設計技術についても具体的な例を用いて説明し、実践的なAI活用スキルの重要性を強調した。"
+        },
+        {
+          "label": "コース選択相談会議",
+          "summary": "山本は加藤にコースの選択について相談し、フリーランスの画像クリエイター、ライティング、またはキャリアの効率化を目的とした複数のプランを説明した。加藤は新しい仕事の学習に不安を感じているが、実践をしながら学ぶことに同意し、プロプラン（27%）とライトプラン（178,000円）の違いを理解した。山本は4ヶ月間のマンツーマンサポート、月2回の面談、課題サポート、学習管理シートなどの詳細なサポート内容を説明し、加藤は両プランについて理解したと回答した。"
+        },
+        {
+          "label": "AI学習とリスキリング補助金讨",
+          "summary": "加藤はAI学習の需要を調査し、どの程度実際に職場で使用されているかを確認したいと述べた。山本は、AI学習スクールの種類や料金、サポート内容の違いについて説明し、特にバイテックやリスキリング補助金の詳細を共有した。加藤はリスキリング補助金の存在や適用条件について質問し、山本はその概要と今後の可能性について回答した。"
+        },
+        {
+          "label": "AI学習学校選択検討会議",
+          "summary": "山本は、AI学習に関する学校の選択について、生徒の支払い金額や内容の確認が重要であることを説明し、複数の学校を調査することを提案した。加藤は、具体的な学習目標が見え次第、より明確な方向性で進めることに同意した。山本は初期4ヶ月間では週10時間程度の学習時間を推奨し、通勤時間や隙間時間を活用することを提案した。"
+        },
+        {
+          "label": "司法書士業務とAI活用検討",
+          "summary": "かとうは司法書士業務を本業にすることに難色を示し、収益は大きいものの仕事としての優先順位が低いと述べた。山本はAIツールの活用が今後の業務改善に重要であると指摘し、かとうに情報収集を進めることを推奨した。かとうは今年中には方向性を決め、年末までに新しい仕事に移行する意向を示し、来月程度で情報収集を行うことで合意した。"
+        }
+      ],
+      "next_steps": [
+        "かとう: AIの学習需要についてさらに調査する",
+        "かとう: AIが実際の仕事でどのように使われているかについて調べる",
+        "かとう: 自分に合った学習方法を検討する",
+        "かとう: AIスキル習得が次のキャリアステップとして適切かどうか判断する"
+      ],
+      "summary_content": "## 簡単な要約
+
+山本はAI技術の実践的なスキル学習プログラムについて説明し、入門編から五つのコースに分かれる構成やGPT図の作成方法などを紹介した。加藤は新しい仕事の学習に不安を感じているものの、実践をしながら学ぶことに同意し、プロプランとライトプランの違いを理解した。加藤は司法書士業務を本業とすることに難色を示しているものの、今年中には新しい仕事への移行を目指し、来月程度で情報収集を行うことで合意した。
+## 次のステップ
+
+- [かとう: AIの学習需要についてさらに調査する](https://us06tasks.zoom.us?meetingId=a%2FrQQ5rmSyGwn1Exow57uw%3D%3D&stepId=b1c76d14-9df2-11f0-8f76-0e102b227099)
+- [かとう: AIが実際の仕事でどのように使われているかについて調べる](https://us06tasks.zoom.us?meetingId=a%2FrQQ5rmSyGwn1Exow57uw%3D%3D&stepId=b1c7744e-9df2-11f0-8f76-0e102b227099)
+- [かとう: 自分に合った学習方法を検討する](https://us06tasks.zoom.us?meetingId=a%2FrQQ5rmSyGwn1Exow57uw%3D%3D&stepId=b1c77868-9df2-11f0-8f76-0e102b227099)
+- [かとう: AIスキル習得が次のキャリアステップとして適切かどうか判断する](https://us06tasks.zoom.us?meetingId=a%2FrQQ5rmSyGwn1Exow57uw%3D%3D&stepId=b1c77be2-9df2-11f0-8f76-0e102b227099)
+## 概要
+
+### AIスキル学習プログラム紹介
+
+山本はAI技術の実践的なスキル学習プログラムについて説明し、インプット学習とサポートの二つの軸で構成されていることを紹介した。入門編では八つの項目から始まり、五つのコース（画像クリエイターコース、ライティングコース、動画クリエイターコース、業務改善コース、そして業務全自動化コース）に分かれる流れを説明した。GPT図の作成方法やプロンプトの設計技術についても具体的な例を用いて説明し、実践的なAI活用スキルの重要性を強調した。
+### コース選択相談会議
+
+山本は加藤にコースの選択について相談し、フリーランスの画像クリエイター、ライティング、またはキャリアの効率化を目的とした複数のプランを説明した。加藤は新しい仕事の学習に不安を感じているが、実践をしながら学ぶことに同意し、プロプラン（27%）とライトプラン（178,000円）の違いを理解した。山本は4ヶ月間のマンツーマンサポート、月2回の面談、課題サポート、学習管理シートなどの詳細なサポート内容を説明し、加藤は両プランについて理解したと回答した。
+### AI学習とリスキリング補助金讨
+
+加藤はAI学習の需要を調査し、どの程度実際に職場で使用されているかを確認したいと述べた。山本は、AI学習スクールの種類や料金、サポート内容の違いについて説明し、特にバイテックやリスキリング補助金の詳細を共有した。加藤はリスキリング補助金の存在や適用条件について質問し、山本はその概要と今後の可能性について回答した。
+### AI学習学校選択検討会議
+
+山本は、AI学習に関する学校の選択について、生徒の支払い金額や内容の確認が重要であることを説明し、複数の学校を調査することを提案した。加藤は、具体的な学習目標が見え次第、より明確な方向性で進めることに同意した。山本は初期4ヶ月間では週10時間程度の学習時間を推奨し、通勤時間や隙間時間を活用することを提案した。
+### 司法書士業務とAI活用検討
+
+かとうは司法書士業務を本業にすることに難色を示し、収益は大きいものの仕事としての優先順位が低いと述べた。山本はAIツールの活用が今後の業務改善に重要であると指摘し、かとうに情報収集を進めることを推奨した。かとうは今年中には方向性を決め、年末までに新しい仕事に移行する意向を示し、来月程度で情報収集を行うことで合意した。
+",
+      "summary_doc_url": "https://docs.zoom.us/doc/2l08FAE0RfaiX3RAhpoiaA"
+    }
+  },
+  "event_ts": 1759232625829
+}
