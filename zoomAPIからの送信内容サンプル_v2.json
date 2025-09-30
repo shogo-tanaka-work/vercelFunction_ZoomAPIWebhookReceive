@@ -1,0 +1,97 @@
+[
+    {
+        "event": "meeting.summary_completed",
+        "payload": {
+            "account_id": "Dr7gRBbXRgq7vwzcJEQrJQ",
+            "object": {
+                "meeting_host_id": "GG29tpZ9T8W8ozPzJ8fpWQ",
+                "meeting_host_email": "sales.bytech1@gmail.com",
+                "meeting_uuid": "a/rQQ5rmSyGwn1Exow57uw==",
+                "meeting_id": 7661729045,
+                "meeting_topic": "②バイテックサポートチームのパーソナルミーティングルーム",
+                "meeting_start_time": "2025-09-30T11:00:46Z",
+                "meeting_end_time": "2025-09-30T11:43:24Z",
+                "summary_start_time": "2025-09-30T11:02:37Z",
+                "summary_end_time": "2025-09-30T11:43:14Z",
+                "summary_created_time": "2025-09-30T11:02:14Z",
+                "summary_last_modified_time": "2025-09-30T11:43:44Z",
+                "summary_title": "Meeting Summary for ②バイテックサポートチームのパーソナルミーティングルーム",
+                "summary_overview": "山本はAI技術の実践的なスキル学習プログラムについて説明し、入門編から五つのコースに分かれる構成やGPT図の作成方法などを紹介した。加藤は新しい仕事の学習に不安を感じているものの、実践をしながら学ぶことに同意し、プロプランとライトプランの違いを理解した。加藤は司法書士業務を本業とすることに難色を示しているものの、今年中には新しい仕事への移行を目指し、来月程度で情報収集を行うことで合意した。",
+                "summary_details": [
+                    {
+                        "label": "AIスキル学習プログラム紹介",
+                        "summary": "山本はAI技術の実践的なスキル学習プログラムについて説明し、インプット学習とサポートの二つの軸で構成されていることを紹介した。入門編では八つの項目から始まり、五つのコース（画像クリエイターコース、ライティングコース、動画クリエイターコース、業務改善コース、そして業務全自動化コース）に分かれる流れを説明した。GPT図の作成方法やプロンプトの設計技術についても具体的な例を用いて説明し、実践的なAI活用スキルの重要性を強調した。"
+                    },
+                    {
+                        "label": "コース選択相談会議",
+                        "summary": "山本は加藤にコースの選択について相談し、フリーランスの画像クリエイター、ライティング、またはキャリアの効率化を目的とした複数のプランを説明した。加藤は新しい仕事の学習に不安を感じているが、実践をしながら学ぶことに同意し、プロプラン（27%）とライトプラン（178,000円）の違いを理解した。山本は4ヶ月間のマンツーマンサポート、月2回の面談、課題サポート、学習管理シートなどの詳細なサポート内容を説明し、加藤は両プランについて理解したと回答した。"
+                    }
+                ],
+                "next_steps": [
+                    "かとう: AIの学習需要についてさらに調査する",
+                    "かとう: AIが実際の仕事でどのように使われているかについて調べる",
+                    "かとう: 自分に合った学習方法を検討する",
+                    "かとう: AIスキル習得が次のキャリアステップとして適切かどうか判断する"
+                ],
+                "summary_content": "## 簡単な要約\n\n山本はAI技術の実践的なスキル学習プログラムについて説明し、入門編から五つのコースに分かれる構成やGPT図の作成方法などを紹介した。加藤は新しい仕事の学習に不安を感じているものの、実践をしながら学ぶことに同意し、プロプランとライトプランの違いを理解した。加藤は司法書士業務を本業とすることに難色を示しているものの、今年中には新しい仕事への移行を目指し、来月程度で情報収集を行うことで合意した。\n## 次のステップ\n\n- かとう: AIの学習需要についてさらに調査する\n- かとう: AIが実際の仕事でどのように使われているかについて調べる\n- かとう: 自分に合った学習方法を検討する\n- かとう: AIスキル習得が次のキャリアステップとして適切かどうか判断する",
+                "summary_doc_url": "https://docs.zoom.us/doc/2l08FAE0RfaiX3RAhpoiaA"
+            }
+        },
+        "event_ts": 1759232625829
+    }
+]
+
+
+簡易版(検証環境)
+curl -X POST https://stg-vercel-function-zoom-api-webhoo.vercel.app/api/send \
+  -H "Content-Type: application/json" \
+  -H "User-Agent: Zoom Marketplace/1.0a" \
+  -d '{
+    "event": "meeting.summary_completed",
+    "payload": {
+      "account_id": "Dr7gRBbXRgq7vwzcJEQrJQ",
+      "object": {
+        "meeting_host_id": "GG29tpZ9T8W8ozPzJ8fpWQ",
+        "meeting_host_email": "sales.bytech1@gmail.com",
+        "meeting_uuid": "a/rQQ5rmSyGwn1Exow57uw==",
+        "meeting_id": 7661729045,
+        "meeting_topic": "②バイテックサポートチームのパーソナルミーティングルーム",
+        "meeting_start_time": "2025-09-30T11:00:46Z",
+        "meeting_end_time": "2025-09-30T11:43:24Z",
+        "summary_title": "Meeting Summary for ②バイテックサポートチームのパーソナルミーティングルーム",
+        "summary_overview": "山本はAI技術の実践的なスキル学習プログラムについて説明した。",
+        "summary_doc_url": "https://docs.zoom.us/doc/2l08FAE0RfaiX3RAhpoiaA"
+      }
+    },
+    "event_ts": 1759232625829
+  }'
+
+簡易版(本番環境)
+curl -X POST https://prod-vercel-function-zoom-api-webhook-re.vercel.app/api/send \
+  -H "Content-Type: application/json" \
+  -H "User-Agent: Zoom Marketplace/1.0a" \
+  -d '{
+    "event": "meeting.summary_completed",
+    "payload": {
+      "account_id": "Dr7gRBbXRgq7vwzcJEQrJQ",
+      "object": {
+        "meeting_host_id": "GG29tpZ9T8W8ozPzJ8fpWQ",
+        "meeting_host_email": "sales.bytech1@gmail.com",
+        "meeting_uuid": "a/rQQ5rmSyGwn1Exow57uw==",
+        "meeting_id": 7661729045,
+        "meeting_topic": "②バイテックサポートチームのパーソナルミーティングルーム",
+        "meeting_start_time": "2025-09-30T11:00:46Z",
+        "meeting_end_time": "2025-09-30T11:43:24Z",
+        "summary_title": "Meeting Summary for ②バイテックサポートチームのパーソナルミーティングルーム",
+        "summary_overview": "山本はAI技術の実践的なスキル学習プログラムについて説明した。",
+        "summary_doc_url": "https://docs.zoom.us/doc/2l08FAE0RfaiX3RAhpoiaA"
+      }
+    },
+    "event_ts": 1759232625829
+  }'
+
+
+zoom APIからのvalidate確認用
+curl -s -X POST https://vercel-function-zoom-api-webhook-re.vercel.app/api/send \
+  -H 'Content-Type: application/json' \
+  -d '{"event":"endpoint.url_validation","payload":{"plainToken":"abc123"}}'
