@@ -13,7 +13,7 @@ const readRaw = (req) =>
   });
 
 // GASへのリクエストを非同期で実行する関数（Fire-and-Forget方式）
-const sendToGasFireAndForget = (webhookData) => {
+const sendToGasFireAndForget = async (webhookData) => {
   const GAS_URL = process.env.GAS_ENDPOINT_URL;
   if (!GAS_URL) {
     console.error('GAS_ENDPOINT_URL is not set');
@@ -91,7 +91,10 @@ export default async function handler(req, res) {
   console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
 
   // GAS処理を非同期で開始（レスポンスを返す前に開始し、完了を待たない）
-  const gasProcessingPromise = sendToGasFireAndForget(body);
+  const gasProcessingPromise = await sendToGasFireAndForget(body);
+
+  // GAS処理の完了を待たずに、即座に200レスポンスを返す
+  console.log('GAS処理を開始しました');
   
   // ★ まず200レスポンスを即座に返す（Zoomのリトライを防ぐため）
   res.status(200).json({ 
