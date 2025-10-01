@@ -1,7 +1,6 @@
-// api/send.js
 import crypto from 'crypto';
+import { Client } from '@upstash/qstash';
 
-// bodyParserを切る（速度とraw取得のため。検証だけなら必須ではないが癖を揃える）
 export const config = { api: { bodyParser: false } };
 
 const readRaw = (req) =>
@@ -12,117 +11,114 @@ const readRaw = (req) =>
     req.on('error', reject);
   });
 
-// GASへのリクエストを同期的に実行する関数
-const sendToGas = async (webhookData) => {
-
-  console.log('GAS_ENDPOINT_URL:', process.env.GAS_ENDPOINT_URL);
-  const GAS_URL = process.env.GAS_ENDPOINT_URL;
-  if (!GAS_URL) {
-    console.error('GAS_ENDPOINT_URL is not set');
-    throw new Error('GAS_ENDPOINT_URL is not set');
-  }
-
-  console.log('GAS送信処理開始');
-  
-  try {
-    const response = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'User-Agent': 'Vercel-Zoom-Webhook-Relay/1.0'
-      },
-      body: JSON.stringify(webhookData),
-    });
-
-    console.log('GASからのレスポンス取得');
-    
-    // GASからのレスポンスを処理
-    let gasResponseBody;
-    const responseText = await response.text();
-    try { 
-      gasResponseBody = JSON.parse(responseText); 
-    } catch { 
-      gasResponseBody = responseText; 
-    }
-
-    console.log('GASからのレスポンス処理完了');
-
-    // 成功時のログ出力
-    if (response.ok) {
-      console.log('Successfully sent to GAS:', response.status);
-      return { success: true, status: response.status, body: gasResponseBody };
-    } else {
-      console.error('GAS responded with error:', response.status, gasResponseBody);
-      return { success: false, status: response.status, body: gasResponseBody };
-    }
-  } catch (error) {
-    console.error('Error sending webhook to GAS:', error.message);
-    throw error;
-  }
-};
+// QStashクライアント初期化
+const qstashClient = new Client({
+  token: process.env.QSTASH_TOKEN,
+});
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end('NG');
+  const startTime = Date.now();
+  const requestId = Math.random().toString(36).substring(7);
+  
+  console.log('\n' + '='.repeat(60));
+  console.log(`🔔 Webhook受信 [${requestId}]`, new Date().toISOString());
+  console.log('='.repeat(60));
+  
+  if (req.method !== 'POST') {
+    console.log('❌ メソッド不正:', req.method);
+    return res.status(405).end('NG');
+  }
 
   const raw = await readRaw(req);
   let body = {};
   try { 
     body = JSON.parse(raw || '{}'); 
-  } catch {}
+  } catch (e) {
+    console.error('❌ JSONパースエラー:', e.message);
+  }
 
-  // ★URL検証だけ確実に返す（署名など他のチェックは後で）
+  // URL検証（そのまま）
   if (body?.event === 'endpoint.url_validation' && body?.payload?.plainToken) {
     const plain = String(body.payload.plainToken);
     const enc = crypto.createHmac('sha256', process.env.ZOOM_WEBHOOK_SECRET_TOKEN)
                       .update(plain).digest('hex');
+    console.log('✅ URL検証レスポンス送信');
     return res.status(200).json({ plainToken: plain, encryptedToken: enc });
   }
 
-  // 以降は本番イベント。GAS処理を同期的に実行してから200を返す
-  // Webhookデータの基本的な検証
+  // データ検証
   if (!body || typeof body !== 'object') {
+    console.error('❌ 不正なWebhookデータ');
     return res.status(400).json({ error: 'Invalid webhook data' });
   }
 
-  // リクエストヘッダーをログ出力（デバッグ用）
-  console.log('Received Zoom Webhook Headers:', JSON.stringify(req.headers, null, 2));
+  // Zoomヘッダー情報
+  const trackingId = req.headers['x-zm-trackingid'];
+  const retryNum = req.headers['x-zoom-retry-num'];
   
-  // Zoom関連の重要なヘッダーを抽出してログ出力
-  const zoomHeaders = {
-    'x-zm-trackingid': req.headers['x-zm-trackingid'],
-    'x-zoom-retry-num': req.headers['x-zoom-retry-num'],
-    'x-zm-signature': req.headers['x-zm-signature'],
-    'x-zm-request-timestamp': req.headers['x-zm-request-timestamp'],
-    'user-agent': req.headers['user-agent'],
-    'content-type': req.headers['content-type']
-  };
-  console.log('Zoom Specific Headers:', JSON.stringify(zoomHeaders, null, 2));
+  console.log('📊 診断情報:');
+  console.log('  - TrackingID:', trackingId || 'なし');
+  console.log('  - リトライ回数:', retryNum ? `${retryNum}回目` : '初回');
+  console.log('  - イベントタイプ:', body.event || '不明');
   
-  // ZoomAPIからのWebhookデータをログ出力（デバッグ用）
-  console.log('Received Zoom Webhook Data:', JSON.stringify(body, null, 2));
+  if (retryNum) {
+    console.warn('⚠️⚠️⚠️ これはZoomからのリトライです！ ⚠️⚠️⚠️');
+  }
 
   try {
-    // GAS処理を同期的に実行（完了を待つ）
-    const gasResult = await sendToGas(body);
+    // ★QStashにキューイング（超高速 < 100ms）
+    console.log('📤 QStashキューイング開始');
     
-    console.log('GAS処理が完了しました');
+    // 処理用エンドポイントのURL構築
+    const processUrl = `https://${req.headers.host}/api/process-gas`;
     
-    // GAS処理の完了後に200レスポンスを返す
-    res.status(200).json({ 
-      success: true, 
-      message: 'Webhook received and processed',
-      timestamp: new Date().toISOString(),
-      gasStatus: gasResult.status
+    const result = await qstashClient.publishJSON({
+      url: processUrl,
+      body: {
+        webhookData: body,
+        trackingId: trackingId,
+        receivedAt: new Date().toISOString(),
+        requestId: requestId
+      },
+      retries: 3, // QStash側で3回リトライ
+      // delay: 0 // 即座に処理（デフォルト）
     });
-  } catch (error) {
-    console.error('GAS処理でエラーが発生しました:', error.message);
+
+    const elapsed = Date.now() - startTime;
     
-    // エラーが発生しても200を返す（Zoomのリトライを防ぐため）
-    res.status(200).json({ 
-      success: false, 
-      message: 'Webhook received but processing failed',
-      timestamp: new Date().toISOString(),
-      error: error.message
+    console.log('='.repeat(60));
+    console.log(`✅ キューイング成功 [${requestId}]`);
+    console.log(`  - 処理時間: ${elapsed}ms`);
+    console.log(`  - QStash MessageID: ${result.messageId}`);
+    console.log(`  - TrackingID: ${trackingId}`);
+    console.log('='.repeat(60) + '\n');
+
+    // ★Zoomに即座に200を返す（3秒以内確実）
+    return res.status(200).json({
+      success: true,
+      message: 'Webhook queued for processing',
+      messageId: result.messageId,
+      trackingId: trackingId,
+      processingTime: elapsed,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    const elapsed = Date.now() - startTime;
+    
+    console.error('='.repeat(60));
+    console.error(`❌ キューイングエラー [${requestId}]`);
+    console.error(`  - エラー内容: ${error.message}`);
+    console.error(`  - 処理時間: ${elapsed}ms`);
+    console.error('='.repeat(60) + '\n');
+    
+    // ★エラーでも200を返す（Zoomのリトライを防ぐ）
+    return res.status(200).json({
+      success: false,
+      message: 'Webhook received but queuing failed',
+      error: error.message,
+      trackingId: trackingId,
+      processingTime: elapsed
     });
   }
 }
